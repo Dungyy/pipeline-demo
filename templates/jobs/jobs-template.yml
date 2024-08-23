@@ -1,0 +1,7 @@
+jobs:
+  - job: BuildAndTest
+    displayName: 'Build and Test'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - template: steps/steps-template.yml

@@ -1,0 +1,7 @@
+trigger:
+  branches:
+    include:
+      - master
+
+stages:
+  - template: ../templates/stages/stages-template.yml

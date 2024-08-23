@@ -1,0 +1,13 @@
+trigger:
+  branches:
+    include:
+      - master
+
+pr: none
+
+stages:
+  - template: ../templates/release-pipeline-template.yml
+    parameters:
+      devWebAppName: ''  # Not used in Prod pipeline
+      prodWebAppName: 'app'
+      azureSubscription: 'xxxx'

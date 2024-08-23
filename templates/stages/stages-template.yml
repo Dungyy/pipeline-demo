@@ -1,0 +1,5 @@
+stages:
+  - stage: BuildAndTestStage
+    displayName: 'Build and Test Stage'
+    jobs:
+      - template: jobs/jobs-template.yml

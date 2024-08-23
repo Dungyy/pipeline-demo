@@ -1,0 +1,53 @@
+parameters:
+  devWebAppName: ''
+  prodWebAppName: ''
+  azureSubscription: ''
+
+stages:
+- stage: DeployToDev
+  displayName: 'Deploy to Dev'
+  jobs:
+  - deployment: DevDeployment
+    environment: 'Dev'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'specific'
+              project: '$(System.TeamProjectId)'
+              pipeline: '$(Build.DefinitionId)'
+              buildVersionToDownload: 'latest'
+              downloadPath: '$(System.ArtifactsDirectory)'
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: ${{ parameters.azureSubscription }}
+              appType: 'webAppLinux'
+              appName: ${{ parameters.devWebAppName }}
+              package: '$(System.ArtifactsDirectory)/drop/**/*.zip'
+
+- stage: DeployToProd
+  displayName: 'Deploy to Prod'
+  dependsOn: DeployToDev
+  condition: succeeded()
+  jobs:
+  - deployment: ProdDeployment
+    environment: 'Prod'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'specific'
+              project: '$(System.TeamProjectId)'
+              pipeline: '$(Build.DefinitionId)'
+              buildVersionToDownload: 'latest'
+              downloadPath: '$(System.ArtifactsDirectory)'
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: ${{ parameters.azureSubscription }}
+              appType: 'webAppLinux'
+              appName: ${{ parameters.prodWebAppName }}
+              package: '$(System.ArtifactsDirectory)/drop/**/*.zip'
