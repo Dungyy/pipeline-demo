@@ -4,4 +4,4 @@ trigger:
       - master
 
 stages:
-  - template: ../templates/stages/stages-template.yml
+  - template: templates/stages/stages-template.yml
